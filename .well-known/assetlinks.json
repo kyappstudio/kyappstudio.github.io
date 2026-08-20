@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.kyappstudio.liveled",
+      "sha256_cert_fingerprints": [
+        "7B:E3:ED:1B:78:56:99:B7:94:A0:B8:5C:84:ED:5E:EC:76:FB:11:B8:F2:95:FA:39:12:54:29:AC:39:E7:85:71"
+      ]
+    }
+  }
+]
