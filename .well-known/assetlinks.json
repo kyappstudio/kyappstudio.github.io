@@ -1,11 +1,16 @@
 [
   {
-    "relation": ["delegate_permission/common.handle_all_urls"],
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
     "target": {
       "namespace": "android_app",
       "package_name": "com.kyappstudio.liveled",
       "sha256_cert_fingerprints": [
-        "7B:E3:ED:1B:78:56:99:B7:94:A0:B8:5C:84:ED:5E:EC:76:FB:11:B8:F2:95:FA:39:12:54:29:AC:39:E7:85:71"
+        "7B:E3:ED:1B:78:56:99:B7:94:A0:B8:5C:84:ED:5E:EC:76:FB:11:B8:F2:95:FA:39:12:54:29:AC:39:E7:85:71",
+        "53:E1:F0:E0:35:BB:0B:86:89:B5:D7:49:D7:85:26:2E:EF:AE:48:3D:3E:86:CD:FE:81:DA:8B:A6:C9:A2:A9:9F",
+        "76:17:E0:86:83:2E:06:C3:FB:14:AE:D1:88:86:6B:CA:D4:6E:B9:31:7B:97:48:94:E4:56:99:07:94:91:4C:5C",
+        "45:C6:7F:EE:82:79:77:98:C3:47:75:6C:2F:55:45:A8:CC:81:F1:CE:CA:14:EF:F8:BA:EF:A1:AB:D1:62:00:88"
       ]
     }
   }
