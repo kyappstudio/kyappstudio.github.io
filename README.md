@@ -31,3 +31,23 @@ Android 驗證連結時一律去抓 `https://<網域>/.well-known/assetlinks.jso
 
 只放前者的話，本機裝的能開，從 Play 裝的不能開——而後者才是真正的使用者。
 Play 簽署金鑰的指紋在 Play Console → 設定 → 應用程式完整性 → 應用程式簽署。
+
+
+## 以後要加別的 App
+
+`assetlinks.json` 最外層是**陣列**，一個 App 一個物件。它綁的是**網域**，不是
+App，也不是路徑——所以同一個檔案服務 `kyappstudio` 底下的所有 App，不管它們的
+落地頁在 `/LiveLEDPublic/`、`/FocusGarden/` 還是別的地方。
+
+    [
+      { ... "package_name": "com.kyappstudio.liveled",     ... },
+      { ... "package_name": "com.kyappstudio.focusgarden", ... }
+    ]
+
+每個 App 的指紋各自獨立，直接從那個 App 在 Play Console 的
+**設定 → 應用程式完整性 → 應用程式簽署** 或 **Deep links** 頁面複製，不要共用、
+也不要自己拼湊——抄錯一個位元組就是安靜地失敗（連結永遠開進瀏覽器，沒有錯誤訊息）。
+
+**注意**：這個檔案的來源在 `LiveLED/site/.well-known/assetlinks.json`，由
+`LiveLED/site/gen.py` 同步過來。日後 App 變多，來源應該搬到一個中立的位置，
+不要繼續掛在某一個 App 的 repo 底下。
