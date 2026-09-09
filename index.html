@@ -1,19 +1,353 @@
 <!doctype html>
+<html lang="zh-Hant">
+<head>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>KY App Studio</title>
+<meta name="description" content="KyAppStudio 出品的 Android App：LiveLED 樂打燈、SubKeep 訂閱管家、FocusGarden 專注花園、汪喵手帳 Wanmeow。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpolygon points='14,2 62,2 62,50 50,62 2,62 2,14' fill='%230d1424' stroke='%2322d3ee' stroke-width='3'/%3E%3Cpath d='M22 16v32M22 33l19-17M28 30l16 18' fill='none' stroke='%2322d3ee' stroke-width='8' stroke-linecap='square'/%3E%3C/svg%3E">
 <style>
-  body{margin:0;min-height:100vh;display:grid;place-items:center;
-       background:#0A0E17;color:#E9F0FA;
-       font-family:"Noto Sans TC","Microsoft JhengHei",sans-serif}
-  a{color:#22D3EE}
-  ul{list-style:none;padding:0;margin:0;line-height:2.2}
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  /* ===== 色調（預設 CYAN，其餘由 data-palette 覆寫） ===== */
+  :root{ --p1:#22d3ee; --p2:#3b82f6; --p3:#f0abfc; --l1:#0891b2; --l2:#2563eb; --l3:#c026d3; }
+  :root[data-palette="cyan"]{ --p1:#22d3ee; --p2:#3b82f6; --p3:#f0abfc; --l1:#0891b2; --l2:#2563eb; --l3:#c026d3; }
+  :root[data-palette="violet"]{ --p1:#a78bfa; --p2:#6366f1; --p3:#f472b6; --l1:#7c3aed; --l2:#4f46e5; --l3:#db2777; }
+  :root[data-palette="emerald"]{ --p1:#34d399; --p2:#22d3ee; --p3:#a3e635; --l1:#059669; --l2:#0891b2; --l3:#65a30d; }
+  :root[data-palette="amber"]{ --p1:#fbbf24; --p2:#f97316; --p3:#f43f5e; --l1:#d97706; --l2:#ea580c; --l3:#e11d48; }
+  :root[data-palette="magenta"]{ --p1:#f472b6; --p2:#a855f7; --p3:#22d3ee; --l1:#db2777; --l2:#9333ea; --l3:#0891b2; }
+  :root[data-palette="crimson"]{ --p1:#f87171; --p2:#ef4444; --p3:#fb923c; --l1:#dc2626; --l2:#b91c1c; --l3:#ea580c; }
+  :root[data-palette="lime"]{ --p1:#a3e635; --p2:#22c55e; --p3:#facc15; --l1:#65a30d; --l2:#16a34a; --l3:#ca8a04; }
+  :root[data-palette="ice"]{ --p1:#e2e8f0; --p2:#94a3b8; --p3:#7dd3fc; --l1:#334155; --l2:#64748b; --l3:#0284c7; }
+
+  /* ===== 深色（預設）：霓虹賽博 ===== */
+  :root, :root[data-theme="dark"]{
+    color-scheme:dark;
+    --c1:var(--p1); --c2:var(--p2); --mag:var(--p3);
+    --bg:#04060c; --bg2:#080b14;
+    --panel:rgba(10,14,24,.78); --panel2:rgba(20,27,43,.9);
+    --line:color-mix(in srgb, var(--c1) 16%, transparent); --line2:color-mix(in srgb, var(--c1) 38%, transparent);
+    --fg:#e6f6ff; --muted:#7c93a8; --warn:#fbbf24; --ok:#34d399;
+    --glow:0 0 0 1px color-mix(in srgb, var(--c1) 55%, transparent), 0 0 18px color-mix(in srgb, var(--c1) 35%, transparent), 0 0 42px color-mix(in srgb, var(--c2) 25%, transparent);
+    --glow-soft:0 0 24px color-mix(in srgb, var(--c1) 10%, transparent);
+    --grid:color-mix(in srgb, var(--c1) 5.5%, transparent); --scan:rgba(255,255,255,.028);
+    --orb1:color-mix(in srgb, var(--c1) 16%, transparent); --orb2:color-mix(in srgb, var(--c2) 18%, transparent); --orb3:color-mix(in srgb, var(--mag) 10%, transparent);
+    --flip:#0d1424; --flip2:#111a2e;
+  }
+  /* ===== 淺色：跟隨系統或手動 ===== */
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      color-scheme:light;
+      --c1:var(--l1); --c2:var(--l2); --mag:var(--l3);
+      --bg:#eef3f8; --bg2:#e4ebf3;
+      --panel:rgba(255,255,255,.82); --panel2:rgba(232,240,248,.95);
+      --line:color-mix(in srgb, var(--c1) 20%, transparent); --line2:color-mix(in srgb, var(--c1) 45%, transparent);
+      --fg:#0b1a2b; --muted:#5b6f85; --warn:#d97706; --ok:#059669;
+      --glow:0 0 0 1px color-mix(in srgb, var(--c1) 55%, transparent), 0 0 16px color-mix(in srgb, var(--c1) 22%, transparent), 0 8px 24px color-mix(in srgb, var(--c2) 14%, transparent);
+      --glow-soft:0 6px 20px color-mix(in srgb, var(--c1) 8%, transparent);
+      --grid:color-mix(in srgb, var(--c1) 7%, transparent); --scan:rgba(0,0,0,.012);
+      --orb1:color-mix(in srgb, var(--c1) 22%, transparent); --orb2:color-mix(in srgb, var(--c2) 16%, transparent); --orb3:color-mix(in srgb, var(--mag) 18%, transparent);
+      --flip:#ffffff; --flip2:#f3f8fc;
+    }
+  }
+  :root[data-theme="light"]{
+    color-scheme:light;
+    --c1:var(--l1); --c2:var(--l2); --mag:var(--l3);
+    --bg:#eef3f8; --bg2:#e4ebf3;
+    --panel:rgba(255,255,255,.82); --panel2:rgba(232,240,248,.95);
+    --line:color-mix(in srgb, var(--c1) 20%, transparent); --line2:color-mix(in srgb, var(--c1) 45%, transparent);
+    --fg:#0b1a2b; --muted:#5b6f85; --warn:#d97706; --ok:#059669;
+    --glow:0 0 0 1px color-mix(in srgb, var(--c1) 55%, transparent), 0 0 16px color-mix(in srgb, var(--c1) 22%, transparent), 0 8px 24px color-mix(in srgb, var(--c2) 14%, transparent);
+    --glow-soft:0 6px 20px color-mix(in srgb, var(--c1) 8%, transparent);
+    --grid:color-mix(in srgb, var(--c1) 7%, transparent); --scan:rgba(0,0,0,.012);
+    --orb1:color-mix(in srgb, var(--c1) 22%, transparent); --orb2:color-mix(in srgb, var(--c2) 16%, transparent); --orb3:color-mix(in srgb, var(--mag) 18%, transparent);
+    --flip:#ffffff; --flip2:#f3f8fc;
+  }
+
+  *{box-sizing:border-box}
+  html{background:var(--bg)}
+  body{
+    margin:0;color:var(--fg);min-height:100vh;display:flex;flex-direction:column;
+    font:15px/1.5 "Rajdhani","Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif;
+    background:
+      radial-gradient(900px 500px at 8% -10%, var(--orb1), transparent 60%),
+      radial-gradient(800px 500px at 100% 0%, var(--orb2), transparent 60%),
+      radial-gradient(700px 500px at 60% 110%, var(--orb3), transparent 60%),
+      linear-gradient(var(--bg2), var(--bg));
+    background-attachment:fixed;
+  }
+  /* 網格 + 掃描線覆蓋層 */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:
+      linear-gradient(var(--grid) 1px, transparent 1px) 0 0/40px 40px,
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px) 0 0/40px 40px;
+    mask-image:radial-gradient(ellipse at 50% 0%, #000 30%, transparent 85%);
+    -webkit-mask-image:radial-gradient(ellipse at 50% 0%, #000 30%, transparent 85%);
+  }
+  body::after{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:repeating-linear-gradient(0deg, transparent 0 2px, var(--scan) 2px 3px);
+  }
+  header, main, footer{position:relative;z-index:1}
+
+  /* ===== Header ===== */
+  header{
+    position:sticky;top:0;z-index:5;
+    background:color-mix(in srgb, var(--bg) 72%, transparent);
+    backdrop-filter:blur(14px) saturate(140%);
+    border-bottom:1px solid var(--line);
+  }
+  header::after{
+    content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;
+    background:linear-gradient(90deg, transparent, var(--c1) 20%, var(--c2) 50%, var(--mag) 80%, transparent);
+    opacity:.8;
+  }
+  .wrap{max-width:1320px;margin:0 auto;padding:0 24px;width:100%}
+  .top{display:flex;align-items:center;gap:14px;padding:14px 24px;flex-wrap:wrap}
+  h1{
+    margin:0;display:flex;align-items:baseline;gap:12px;
+    font:800 19px/1 "Orbitron","Segoe UI",sans-serif;letter-spacing:.14em;text-transform:uppercase;
+    background:linear-gradient(90deg, var(--c1), var(--c2) 60%, var(--mag));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 0 10px color-mix(in srgb, var(--c1) 35%, transparent));
+  }
+  h1 .logo{width:30px;height:30px;align-self:center;flex:none;filter:drop-shadow(0 0 8px color-mix(in srgb, var(--c1) 45%, transparent))}
+  h1 small{
+    font:500 11.5px/1 "JetBrains Mono",Consolas,monospace;letter-spacing:.08em;
+    color:var(--muted);-webkit-text-fill-color:var(--muted);filter:none;text-transform:none;
+  }
+  h1 small b{color:var(--c1);-webkit-text-fill-color:var(--c1);font-weight:500}
+
+  .ctl{display:flex;gap:8px;align-items:center;flex-wrap:wrap;flex:none;margin-left:auto;color:var(--muted);font-size:13px}
+  .ctl button{
+    background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:6px;
+    padding:7px 10px;font:600 13px "Rajdhani","Segoe UI",sans-serif;letter-spacing:.04em;cursor:pointer;
+    transition:border-color .15s, box-shadow .15s, color .15s;
+  }
+  .ctl button:hover{border-color:var(--c1);box-shadow:var(--glow-soft);color:var(--c1)}
+  .ctl button:focus-visible{outline:none;border-color:var(--c1);box-shadow:var(--glow)}
+
+  /* ===== Main ===== */
+  main{padding:22px 0 60px;flex:1}
+  .hint{font:400 11.5px "JetBrains Mono",Consolas,monospace;color:var(--muted);margin:0 0 18px;letter-spacing:.02em}
+  .hint::before{content:"// ";color:var(--c1)}
+
+  /* 開場標語 */
+  .hero{position:relative;margin:6px 0 34px;padding:26px 28px;background:var(--panel);border:1px solid var(--line2);backdrop-filter:blur(8px);
+    clip-path:polygon(16px 0, 100% 0, 100% calc(100% - 16px), calc(100% - 16px) 100%, 0 100%, 0 16px)}
+  .hero::before, .hero::after{content:"";position:absolute;width:12px;height:12px;pointer-events:none;border-color:var(--c1);border-style:solid}
+  .hero::before{top:6px;right:6px;border-width:1px 1px 0 0}
+  .hero::after{bottom:6px;left:6px;border-width:0 0 1px 1px}
+  .hero .k{font:500 11px "JetBrains Mono",Consolas,monospace;letter-spacing:.22em;text-transform:uppercase;color:var(--c1);margin-bottom:10px}
+  .hero .k::before{content:"// "}
+  .hero .s{
+    margin:0;font:800 clamp(22px, 4vw, 34px)/1.15 "Orbitron","Noto Sans TC","Microsoft JhengHei","Segoe UI",sans-serif;letter-spacing:.06em;
+    background:linear-gradient(90deg, var(--c1), var(--c2) 60%, var(--mag));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 0 12px color-mix(in srgb, var(--c1) 30%, transparent));
+  }
+  .hero p{margin:12px 0 0;max-width:720px;color:var(--muted);font-size:15.5px;line-height:1.7}
+  .hero p b{color:var(--fg);font-weight:600}
+
+  section{margin-bottom:32px}
+  h2{
+    margin:0 0 14px;display:flex;align-items:center;gap:10px;
+    font:500 12px "JetBrains Mono",Consolas,monospace;letter-spacing:.18em;text-transform:uppercase;color:var(--c1);
+  }
+  h2::before{content:"";width:3px;height:14px;background:linear-gradient(var(--c1), var(--c2));box-shadow:0 0 8px var(--c1)}
+  h2::after{content:"";flex:1;height:1px;background:linear-gradient(90deg, var(--line2), transparent)}
+  h2 .n{
+    border:1px solid var(--line2);border-radius:3px;padding:0 7px;font-size:10.5px;color:var(--fg);
+    background:var(--panel2);letter-spacing:.06em;
+  }
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+
+  a.card{
+    display:flex;gap:12px;align-items:flex-start;padding:15px 16px;position:relative;
+    background:var(--panel);border:1px solid var(--line);
+    text-decoration:none;color:inherit;
+    backdrop-filter:blur(8px);
+    clip-path:polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+    transition:transform .15s, border-color .15s, box-shadow .15s, background .15s;
+  }
+  /* HUD 角落標記 */
+  a.card::before, a.card::after{
+    content:"";position:absolute;width:10px;height:10px;pointer-events:none;
+    border-color:var(--line2);border-style:solid;transition:border-color .15s;
+  }
+  a.card::before{top:5px;right:5px;border-width:1px 1px 0 0}
+  a.card::after{bottom:5px;left:5px;border-width:0 0 1px 1px}
+  a.card:hover, a.card:focus-visible{
+    transform:translateY(-3px);border-color:var(--c1);box-shadow:var(--glow);outline:none;
+    background:color-mix(in srgb, var(--panel) 90%, var(--c1));
+  }
+  a.card:hover::before, a.card:hover::after{border-color:var(--c1)}
+
+  .ico{
+    width:38px;height:38px;flex:none;display:grid;place-items:center;overflow:hidden;
+    background:var(--panel2);border:1px solid var(--line);
+    clip-path:polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px);
+    font:700 15px "Orbitron",sans-serif;color:var(--c1);
+  }
+  .body{min-width:0;flex:1}
+  .t{
+    font:600 16px/1.3 "Rajdhani","Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif;letter-spacing:.01em;
+  }
+  .t small{color:var(--muted);font-weight:500;font-size:13px;margin-left:6px}
+  .desc{color:var(--fg);opacity:.85;margin-top:6px;font-size:13.5px;line-height:1.55}
+  .d{
+    color:var(--muted);margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+    font:400 11.5px "JetBrains Mono","Cascadia Code",Consolas,monospace;letter-spacing:.01em;
+  }
+  .d .dom{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%}
+  .badge{
+    font-size:9.5px;padding:1px 7px;border:1px solid currentColor;line-height:1.6;letter-spacing:.1em;text-transform:uppercase;
+    clip-path:polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px);
+  }
+  .badge.android{color:var(--ok);text-shadow:0 0 8px color-mix(in srgb, var(--ok) 50%, transparent)}
+  .badge.legal{color:var(--mag);text-shadow:0 0 8px color-mix(in srgb, var(--mag) 60%, transparent)}
+
+  footer{
+    color:var(--muted);padding:14px 24px;border-top:1px solid var(--line);
+    font:400 11px "JetBrains Mono",Consolas,monospace;letter-spacing:.02em;
+    display:flex;gap:14px;flex-wrap:wrap;align-items:center;
+  }
+  footer a{color:var(--c1);text-decoration:none;background:var(--panel2);border:1px solid var(--line);padding:1px 6px;border-radius:3px}
+  footer a:hover{border-color:var(--c1);box-shadow:var(--glow-soft)}
+  footer .sp{flex:1}
+
+  /* ===== 色調切換 ===== */
+  .pal-wrap{position:relative}
+  #pal{padding:7px 9px;line-height:0}
+  .pal-dot{display:inline-block;width:13px;height:13px;background:linear-gradient(135deg,var(--c1),var(--c2));box-shadow:0 0 6px var(--c1);
+    clip-path:polygon(3px 0, 100% 0, 100% calc(100% - 3px), calc(100% - 3px) 100%, 0 100%, 0 3px)}
+  .pal-pop{position:absolute;right:0;top:calc(100% + 8px);z-index:20;display:grid;grid-template-columns:repeat(2,1fr);gap:6px;padding:8px;
+    background:var(--panel2);border:1px solid var(--line2);box-shadow:var(--glow-soft), 0 12px 32px rgba(0,0,0,.35);backdrop-filter:blur(12px);
+    clip-path:polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px)}
+  .sw{display:flex;align-items:center;gap:8px;padding:7px 12px 7px 9px;background:transparent;color:var(--muted);border:1px solid transparent;cursor:pointer;
+    font:500 11px "JetBrains Mono",Consolas,monospace;letter-spacing:.12em;text-align:left;transition:color .12s, border-color .12s, background .12s}
+  .sw i{width:14px;height:14px;flex:none;background:linear-gradient(135deg,var(--s1),var(--s2));box-shadow:0 0 8px var(--s1);
+    clip-path:polygon(4px 0, 100% 0, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0 100%, 0 4px)}
+  .sw:hover{color:var(--fg);border-color:var(--line2);background:color-mix(in srgb, var(--panel) 70%, transparent)}
+  .sw.on{color:var(--c1);border-color:var(--c1);box-shadow:var(--glow-soft)}
+  .hidden{display:none!important}
+
+  @media (max-width:640px){ .top{padding:12px 16px} .wrap{padding:0 16px} .hero{padding:20px 18px} }
+  @media (prefers-reduced-motion: reduce){ *{transition:none!important} }
 </style>
-<div>
-  <h1>KY App Studio</h1>
-  <ul>
-    <li><a href="/LiveLEDPublic/">LiveLED 樂打燈</a></li>
-    <li><a href="/SubKeepPublic/">SubKeep 訂閱管家</a></li>
-    <li><a href="/FocusGardenPublic/">FocusGarden 專注花園</a></li>
-    <li><a href="/WanmeowPublic/">汪喵手帳 Wanmeow</a></li>
-  </ul>
-</div>
+</head>
+<body>
+<script>
+  try { const t = localStorage.getItem('ky.theme'); if (t === 'light' || t === 'dark') document.documentElement.dataset.theme = t; } catch (e) {}
+  try { const p = localStorage.getItem('ky.palette'); if (p && /^[a-z]+$/.test(p)) document.documentElement.dataset.palette = p; } catch (e) {}
+</script>
+<header>
+  <div class="wrap top">
+    <h1><svg class="logo" viewBox="0 0 64 64" width="30" height="30" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--c1)"/><stop offset="1" stop-color="var(--c2)"/></linearGradient><linearGradient id="lb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--c1)" stop-opacity=".9"/><stop offset="1" stop-color="var(--mag)" stop-opacity=".7"/></linearGradient><filter id="lf" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="1.6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><polygon points="14,2 62,2 62,50 50,62 2,62 2,14" fill="var(--flip)" stroke="url(#lb)" stroke-width="2.5"/><path d="M8 8h6M8 8v6" stroke="var(--c1)" stroke-width="2" fill="none" opacity=".8"/><path d="M22 16v32M22 33l19-17M28 30l16 18" fill="none" stroke="url(#lg)" stroke-width="8" stroke-linecap="square" stroke-linejoin="miter" filter="url(#lf)"/></svg>KyAppStudio <small>APP STUDIO · <b>4</b> APPS</small></h1>
+    <div class="ctl">
+      <div class="pal-wrap">
+        <button id="pal" type="button" title="切換色調" aria-label="切換色調"><i class="pal-dot"></i></button>
+        <div class="pal-pop hidden" id="palPop"><button type="button" class="sw" data-p="cyan" style="--s1:#22d3ee;--s2:#3b82f6"><i></i>CYAN</button><button type="button" class="sw" data-p="violet" style="--s1:#a78bfa;--s2:#6366f1"><i></i>VIOLET</button><button type="button" class="sw" data-p="emerald" style="--s1:#34d399;--s2:#22d3ee"><i></i>EMERALD</button><button type="button" class="sw" data-p="amber" style="--s1:#fbbf24;--s2:#f97316"><i></i>AMBER</button><button type="button" class="sw" data-p="magenta" style="--s1:#f472b6;--s2:#a855f7"><i></i>MAGENTA</button><button type="button" class="sw" data-p="crimson" style="--s1:#f87171;--s2:#ef4444"><i></i>CRIMSON</button><button type="button" class="sw" data-p="lime" style="--s1:#a3e635;--s2:#22c55e"><i></i>LIME</button><button type="button" class="sw" data-p="ice" style="--s1:#e2e8f0;--s2:#94a3b8"><i></i>ICE</button></div>
+      </div>
+      <button id="theme" type="button" title="切換主題：自動 / 淺色 / 深色"></button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+  <div class="hint">獨立開發的 Android 小工具，離線、無追蹤、不用註冊。</div>
+
+  <div class="hero">
+    <div class="k">KY App Studio</div>
+    <p class="s">做得剛剛好的 App</p>
+    <p>每個 App 只做一件事。點下方卡片可以看到各 App 的隱私權政策與使用條款。</p>
+  </div>
+
+  <section>
+    <h2>APPS <span class="n">4</span></h2>
+    <div class="grid">
+      <a class="card" href="/LiveLEDPublic/" title="LiveLED 樂打燈">
+        <div class="ico">L</div>
+        <div class="body">
+          <div class="t">LiveLED 樂打燈</div>
+          <div class="desc">把手機變成 LED 跑馬燈與應援燈牌，演唱會、活動、接機一開就亮。</div>
+          <div class="d"><span class="dom">/LiveLEDPublic/</span><span class="badge android">Android</span><span class="badge legal">Legal</span></div>
+        </div>
+      </a>
+      <a class="card" href="/SubKeepPublic/" title="SubKeep 訂閱管家">
+        <div class="ico">S</div>
+        <div class="body">
+          <div class="t">SubKeep 訂閱管家</div>
+          <div class="desc">記錄每一筆定期扣款，到期前提醒，看清楚每月與每年的真實支出。</div>
+          <div class="d"><span class="dom">/SubKeepPublic/</span><span class="badge android">Android</span><span class="badge legal">Legal</span></div>
+        </div>
+      </a>
+      <a class="card" href="/FocusGardenPublic/" title="FocusGarden 專注花園">
+        <div class="ico">F</div>
+        <div class="body">
+          <div class="t">FocusGarden 專注花園</div>
+          <div class="desc">番茄鐘加習慣養成。專注時種一棵樹，時間到收進你的森林。</div>
+          <div class="d"><span class="dom">/FocusGardenPublic/</span><span class="badge android">Android</span><span class="badge legal">Legal</span></div>
+        </div>
+      </a>
+      <a class="card" href="/WanmeowPublic/" title="汪喵手帳 Wanmeow">
+        <div class="ico">W</div>
+        <div class="body">
+          <div class="t">汪喵手帳 <small>Wanmeow</small></div>
+          <div class="desc">毛孩照護提醒與記帳。疫苗、驅蟲、洗澡、吃藥不漏掉，體重曲線與花費一目了然。</div>
+          <div class="d"><span class="dom">/WanmeowPublic/</span><span class="badge android">Android</span><span class="badge legal">Legal</span></div>
+        </div>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <span>© <span id="yr"></span> KyAppStudio</span>
+  <span class="sp"></span>
+  <a href="/app-ads.txt">app-ads.txt</a>
+  <a href="/.well-known/assetlinks.json">assetlinks.json</a>
+</footer>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  function save(k, v){ try { localStorage.setItem(k, v); } catch (e) {} }
+
+  // ---- 主題切換：auto -> light -> dark ----
+  const themeBtn = document.getElementById('theme');
+  const THEMES = ['auto', 'light', 'dark'];
+  const THEME_LABEL = { auto: '🌓 自動', light: '☀️ 淺色', dark: '🌙 深色' };
+  function getTheme(){ try { const t = localStorage.getItem('ky.theme'); return THEMES.includes(t) ? t : 'auto'; } catch (e) { return 'auto'; } }
+  function applyTheme(t){
+    if (t === 'auto') delete document.documentElement.dataset.theme;
+    else document.documentElement.dataset.theme = t;
+    themeBtn.textContent = THEME_LABEL[t];
+  }
+  themeBtn.addEventListener('click', () => {
+    const next = THEMES[(THEMES.indexOf(getTheme()) + 1) % THEMES.length];
+    save('ky.theme', next);
+    applyTheme(next);
+  });
+  applyTheme(getTheme());
+
+  // ---- 色調切換 ----
+  const palBtn = document.getElementById('pal');
+  const palPop = document.getElementById('palPop');
+  const swatches = [...palPop.querySelectorAll('.sw')];
+  const PAL_IDS = swatches.map(b => b.dataset.p);
+  function getPalette(){ try { const p = localStorage.getItem('ky.palette'); return PAL_IDS.includes(p) ? p : PAL_IDS[0]; } catch (e) { return PAL_IDS[0]; } }
+  function applyPalette(p){
+    if (p === PAL_IDS[0]) delete document.documentElement.dataset.palette;
+    else document.documentElement.dataset.palette = p;
+    swatches.forEach(b => b.classList.toggle('on', b.dataset.p === p));
+  }
+  swatches.forEach(b => b.addEventListener('click', () => { save('ky.palette', b.dataset.p); applyPalette(b.dataset.p); palPop.classList.add('hidden'); }));
+  palBtn.addEventListener('click', (e) => { e.stopPropagation(); palPop.classList.toggle('hidden'); });
+  document.addEventListener('click', (e) => { if (!e.target.closest('.pal-wrap')) palPop.classList.add('hidden'); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') palPop.classList.add('hidden'); });
+  applyPalette(getPalette());
+</script>
+</body>
+</html>
